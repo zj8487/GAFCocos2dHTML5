@@ -3,12 +3,28 @@ gaf.Mask = gaf.Object.extend
 ({
     _className: "GAFMask",
     _clippingNode: null,
+    _maskNode: null,
 
     ctor : function(gafSpriteProto)
     {
         this._super();
         cc.assert(gafSpriteProto, "Error! Missing mandatory parameter.");
         this._gafproto = gafSpriteProto;
+    },
+
+    setLooped: function (looped, recursively)
+    {
+        this._maskNode.setLooped(looped, recursively);
+    },
+
+    getBoundingBoxForCurrentFrame: function ()
+    {
+        return this._maskNode.getBoundingBoxForCurrentFrame();
+    },
+
+    setAnimationRunning: function (value, recursively)
+    {
+        this._maskNode.setAnimationRunning(value, recursively)
     },
 
     _init : function()
@@ -19,6 +35,7 @@ gaf.Mask = gaf.Object.extend
             this._clippingNode = cc.ClippingNode.create(this._maskNode);
         this._clippingNode.setAlphaThreshold(0.5);
         this.addChild(this._clippingNode);
+
     },
 
     setExternalTransform : function(affineTransform)
@@ -32,5 +49,13 @@ gaf.Mask = gaf.Object.extend
     _getNode : function()
     {
         return this._clippingNode;
+    },
+
+    _step: function ()
+    {
+        if(this._maskNode._step)
+            this._maskNode._step();
     }
+
+
 });
